@@ -4,7 +4,7 @@
 typedef struct
 {
   char name[20];
-  float score;
+  int score;
 } Person;
 
 int main()
@@ -17,12 +17,12 @@ int main()
   for (int i = 0; i < 5; i++)
   {
     char name[20];
-    float score;
+    int score;
     printf("Enter name : ");
     scanf("%s", name);
     strcpy(people[i].name, name);
     printf("Enter score : ");
-    scanf("%f", &score);
+    scanf("%d", &score);
     people[i].score = score;
   }
 
@@ -43,7 +43,7 @@ int main()
   {
     if (people[i].score > mean)
     {
-      printf("Name : %s , Score : %.2f\n", people[i].name, people[i].score);
+      printf("Name : %s , Score : %d\n", people[i].name, people[i].score);
     }
   }
 
