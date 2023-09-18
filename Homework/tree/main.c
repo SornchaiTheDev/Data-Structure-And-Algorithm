@@ -22,7 +22,7 @@ NodePtr createRoot(char name[100], int type, int size)
   strcpy(node->name, name);
   node->size = size;
   node->type = type;
-  node->total_size = 0;
+  node->total_size = size;
   node->parent = NULL;
   node->firstChild = NULL;
   node->nextSibling = NULL;
@@ -35,7 +35,7 @@ NodePtr createNode(char name[100], int type, int size, NodePtr parent)
   strcpy(node->name, name);
   node->size = size;
   node->type = type;
-  node->total_size = 0;
+  node->total_size = size;
   node->parent = parent;
   node->firstChild = NULL;
   node->nextSibling = NULL;
@@ -64,7 +64,7 @@ NodePtr createNode(char name[100], int type, int size, NodePtr parent)
   return node;
 }
 
-void printChild(NodePtr node, int space, int isLast)
+void printBeautyChild(NodePtr node, int space, int isLast)
 {
   if (node == NULL)
     return;
@@ -90,19 +90,53 @@ void printChild(NodePtr node, int space, int isLast)
     printf("├── ");
   }
 
-  printf("%s\n", node->name);
+  printf("%s total size : %dK\n", node->name, node->total_size / 1000);
 
   if (node->firstChild != NULL || node->nextSibling != NULL)
   {
-    printChild(node->firstChild, space + 4, node->nextSibling == NULL);
-    printChild(node->nextSibling, space, 1);
+    printBeautyChild(node->firstChild, space + 4, node->nextSibling == NULL);
+    printBeautyChild(node->nextSibling, space, 1);
   }
 }
 
-void printTree(NodePtr node)
+void printChild(NodePtr node)
+{
+  if (node == NULL)
+    return;
+
+  printf("%s total size : %d\n", node->name, node->total_size);
+
+  if (node->firstChild != NULL || node->nextSibling != NULL)
+  {
+    printChild(node->firstChild);
+    printChild(node->nextSibling);
+  }
+}
+
+void printTree(NodePtr root)
+{
+  printChild(root);
+}
+
+void printBeautyTree(NodePtr node)
 {
   printf(".\n");
-  printChild(node, 0, 1);
+  printBeautyChild(node, 0, 1);
+}
+
+void total_size(NodePtr node)
+{
+  if (node == NULL)
+  {
+    return;
+  }
+
+  total_size(node->firstChild);
+  total_size(node->nextSibling);
+  if (node->parent != NULL)
+  {
+    node->parent->total_size += node->total_size;
+  }
 }
 
 int main()
@@ -129,6 +163,9 @@ int main()
   NodePtr buylow = createNode("buylow", 0, 26000, papers);
   NodePtr sellhigh = createNode("sellhigh", 0, 55000, papers);
   NodePtr market = createNode("market", 0, 4786000, demos);
+  total_size(root);
+  printBeautyTree(root);
+  printf("\n\n");
   printTree(root);
   return 0;
 }
