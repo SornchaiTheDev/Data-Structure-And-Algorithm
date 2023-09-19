@@ -101,16 +101,17 @@ void printBeautyChild(NodePtr node, int space, int isLast)
 
 void printChild(NodePtr node)
 {
+
   if (node == NULL)
     return;
 
-  printf("%s total size : %d\n", node->name, node->total_size);
-
-  if (node->firstChild != NULL || node->nextSibling != NULL)
+  if (node->type == 1)
   {
-    printChild(node->firstChild);
-    printChild(node->nextSibling);
+    printf("Name: %s ,total size: %d\n", node->name, node->total_size);
   }
+
+  printChild(node->firstChild);
+  printChild(node->nextSibling);
 }
 
 void printTree(NodePtr root)
